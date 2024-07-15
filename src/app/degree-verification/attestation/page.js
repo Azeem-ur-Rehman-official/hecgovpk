@@ -281,7 +281,7 @@ const Apply = () => {
                         </div>
                         <div class="text">I'm not a robot</div>
                         <div className="logo">
-                          <img src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/" />
+                          <img src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/" alt="abc"/>
                           <p className="text2">reCAPTCHA</p>
                           <small>Privacy - Terms</small>
                         </div>
