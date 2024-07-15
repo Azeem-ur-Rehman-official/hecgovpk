@@ -50,7 +50,7 @@ const validationSchema = [
 
 const Apply = () => {
   const [activeStep, setActiveStep] = useState(0);
-const [data, setData] = useState([])
+const [data, setData] = useState([{stamp:"9878323",cnic:"35201103977261",name:"Adeel Akram",university:"University of the Punjab",degree:"Bachlor of Commerce"}])
 const [status, setStatus] = useState(false);
 const [apiStatus, setApiStatus] = useState(false);
 const [capcha, setCapcha] = useState(false);
@@ -67,9 +67,9 @@ console.log("data",data);
       formData.append("stampNumber", values.stampNumber);
       formData.append("attestationType", values.attestationType);
       formData.append("cnicPassport", values.cnicPassport);
-      const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
-      if(data.data.success==true){
-        setData(data.data.Data)
+      // const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
+      if(values.stampNumber==data[0].stamp && values.cnicPassport==data[0].cnic){
+        setData([{stamp:"9878323",cnic:"35201103977261",name:"Adeel Akram",university:"University of the Punjab",degree:"Bachlor of Commerce"}]);
         setApiStatus(true);
         setStatus(true);
       }
