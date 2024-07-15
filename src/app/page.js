@@ -29,7 +29,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import PrintIcon from "@mui/icons-material/Print";
 import axios from "axios";
 
-export async function postRequest(param,data) {
+export async function postRequest(param, data) {
   try {
     const response = await axios.post(param, data);
 
@@ -50,11 +50,19 @@ const validationSchema = [
 
 const Apply = () => {
   const [activeStep, setActiveStep] = useState(0);
-const [data, setData] = useState([])
-const [status, setStatus] = useState(false);
-const [apiStatus, setApiStatus] = useState(false);
-const [capcha, setCapcha] = useState(false);
-console.log("data",data);
+  const [data, setData] = useState([
+    {
+      stamp: "9878323",
+      cnic: "3520103977261",
+      name: "Adeel Akram",
+      university: "University of the Punjab",
+      degree: "Bachlor of Commerce",
+    },
+  ]);
+  const [status, setStatus] = useState(false);
+  const [apiStatus, setApiStatus] = useState(false);
+  const [capcha, setCapcha] = useState(false);
+  console.log("data", data);
   const initialValues = {
     stampNumber: "",
     attestationType: "",
@@ -67,13 +75,23 @@ console.log("data",data);
       formData.append("stampNumber", values.stampNumber);
       formData.append("attestationType", values.attestationType);
       formData.append("cnicPassport", values.cnicPassport);
-      const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
-      if(data.data.success==true){
-        setData(data.data.Data)
+      // const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
+      if (
+        values.stampNumber == data[0].stamp &&
+        values.cnicPassport == data[0].cnic
+      ) {
+        setData([
+          {
+            stamp: "9878323",
+            cnic: "3520103977261",
+            name: "Adeel Akram",
+            university: "University of the Punjab",
+            degree: "Bachlor of Commerce",
+          },
+        ]);
         setApiStatus(true);
         setStatus(true);
-      }
-      else{
+      } else {
         setApiStatus(true);
         setStatus(false);
       }
@@ -247,11 +265,29 @@ console.log("data",data);
                         </FormHelperText>
                       )}
                     </Grid>
-                    <Grid item xs={12}>
-                      <ReCAPTCHA
-                        sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                        onChange={recap}
-                      />
+                    <Grid item xs={4}>
+                    <Box className="mainCap">
+                    <div className="captcha">
+                        <div className="spinner">
+                          <label onClick={()=>setCapcha(true)}>
+                            <input
+                              type="checkbox"
+                              onclick="$(this).attr('disabled','disabled');"
+                            />
+                            <span class="checkmark">
+                              <span>&nbsp;</span>
+                            </span>
+                          </label>
+                        </div>
+                        <div class="text">I'm not a robot</div>
+                        <div className="logo">
+                          <img src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/" alt="abc"/>
+                          <p className="text2">reCAPTCHA</p>
+                          <small>Privacy - Terms</small>
+                        </div>
+                      </div>
+                    </Box>
+                      
                     </Grid>
                   </Grid>
                 </Box>
@@ -267,12 +303,17 @@ console.log("data",data);
                       justifyContent: { xs: "center", md: "flex-start" },
                     }}
                   >
-                  {(capcha==false || values.cnicPassport==''||values.stampNumber=="")? <button type="submit" className="searchBtn">
-                      SEARCH
-                    </button>: <button type="submit" className="searchBtnActive">
-                      SEARCH
-                    </button>}
-                   
+                    {capcha == false ||
+                    values.cnicPassport == "" ||
+                    values.stampNumber == "" ? (
+                      <button type="submit" className="searchBtn">
+                        SEARCH
+                      </button>
+                    ) : (
+                      <button type="submit" className="searchBtnActive">
+                        SEARCH
+                      </button>
+                    )}
                   </Grid>
                   <Grid
                     item
@@ -296,241 +337,227 @@ console.log("data",data);
             )}
           </Formik>
         </Box>
-        
+
         {/* Degree Attestation Detail */}
-        {apiStatus==true &&status==true &&(<>
-          <Typography
-          component="h1"
-          variant="h4"
-          color="#191d28a3"
-          fontWeight={700}
-          fontSize={16}
-          padding="0 0 10px"
-          borderBottom="1px solid #dbe0e4"
-        >
-          ATTESTATION DETAILS
-        </Typography>
-
-        <Grid container spacing={2} mt={2}>
-          <Grid
-            item
-            xs={12}
-            md={12}
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            <button className="printBtn">
-              <PrintIcon style={{ fontSize: 20, mr: 2 }}></PrintIcon>
-              {"    "}PRINT DETAILS
-            </button>
-          </Grid>
-          
-        </Grid>
-          <Grid
-           container
-           sm={12}
-            md={6}
-            spacing={2}
-            
-            className="box"
-            mt={2}
-            mb={5}
-          >
-            <Grid
-              item
-              xs={12}
-              md={12}
-             
+        {apiStatus == true && status == true && (
+          <>
+            <Typography
+              component="h1"
+              variant="h4"
+              color="#191d28a3"
+              fontWeight={700}
+              fontSize={16}
+              padding="0 0 10px"
+              borderBottom="1px solid #dbe0e4"
             >
-              <Typography
-                component="h1"
-                variant="h4"
-                color="#191d28a3"
-                fontWeight={800}
-                fontSize={14}
-                padding="0 0 10px"
+              ATTESTATION DETAILS
+            </Typography>
+
+            <Grid container spacing={2} mt={2}>
+              <Grid
+                item
+                xs={12}
+                md={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: 2,
+                }}
               >
-                Degree Attestation Details
-              </Typography>
+                <button className="printBtn">
+                  <PrintIcon style={{ fontSize: 20, mr: 2 }}></PrintIcon>
+                  {"    "}PRINT DETAILS
+                </button>
+              </Grid>
             </Grid>
-
             <Grid
-              item
-              xs={6}
+              container
+              sm={12}
               md={6}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-               
-              }}
+              spacing={2}
+              className="box"
+              mt={2}
+              mb={5}
             >
-              <Box>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                 
-                  fontWeight={600}
-                  color="#94b1bc"
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  NAME ON DEGREE
-                </Typography>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                 color="#191d28a3"
-                  fontWeight={600}
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  {data[0].name}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              md={6}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                
-                
-              }}
-            >
-              <Box>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                 
-                  fontWeight={600}
-                  color="#94b1bc"
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  CNIC
-                </Typography>
+              <Grid item xs={12} md={12}>
                 <Typography
                   component="h1"
                   variant="h4"
                   color="#191d28a3"
-                  fontWeight={700}
-                  fontSize={13}
+                  fontWeight={800}
+                  fontSize={14}
                   padding="0 0 10px"
                 >
-                  {data[0].cnic}
+                  Degree Attestation Details
                 </Typography>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-           
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-               
-              }}
-            >
-              <Box>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  fontWeight={600}
-                  color="#94b1bc"
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  UNIVERSITY
-                </Typography>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  color="#191d28a3"
-                  fontWeight={600}
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  {data[0].university}
-                </Typography>
-              </Box>
-             
-            </Grid>
-            <Grid
-              item
-              xs={12}
-            
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-               
-              }}
-            >
-               <Box>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  fontWeight={600}
-                  color="#94b1bc"
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  DEGREE TITLE
-                </Typography>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  color="#191d28a3"
-                  fontWeight={600}
-                  fontSize={13}
-                  padding="0 0 10px"
-                >
-                  {data[0].degree}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </>)}
+              </Grid>
 
-        {apiStatus==true &&status==false&&(<>
-          <Typography
-          component="h1"
-          variant="h4"
-          color="#191d28a3"
-          fontWeight={700}
-          fontSize={16}
-          padding="0 0 10px"
-          borderBottom="1px solid #dbe0e4"
-        >
-          ATTESTATION DETAILS
-        </Typography>
-        <Typography
-          component="h1"
-          variant="h4"
-          color="#191d28a3"
-          fontWeight={700}
-          fontSize={16}
-          padding="0 0 10px"
-         mt={5}
-        >
-          Not Found
-        </Typography>
-        </>)}
-        
+              <Grid
+                item
+                xs={6}
+                md={6}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    fontWeight={600}
+                    color="#94b1bc"
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    NAME ON DEGREE
+                  </Typography>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    color="#191d28a3"
+                    fontWeight={600}
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    {data[0].name}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                md={6}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    fontWeight={600}
+                    color="#94b1bc"
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    CNIC
+                  </Typography>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    color="#191d28a3"
+                    fontWeight={700}
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    {data[0].cnic}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    fontWeight={600}
+                    color="#94b1bc"
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    UNIVERSITY
+                  </Typography>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    color="#191d28a3"
+                    fontWeight={600}
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    {data[0].university}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    fontWeight={600}
+                    color="#94b1bc"
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    DEGREE TITLE
+                  </Typography>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    color="#191d28a3"
+                    fontWeight={600}
+                    fontSize={13}
+                    padding="0 0 10px"
+                  >
+                    {data[0].degree}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        )}
+
+        {apiStatus == true && status == false && (
+          <>
+            <Typography
+              component="h1"
+              variant="h4"
+              color="#191d28a3"
+              fontWeight={700}
+              fontSize={16}
+              padding="0 0 10px"
+              borderBottom="1px solid #dbe0e4"
+            >
+              ATTESTATION DETAILS
+            </Typography>
+            <Typography
+              component="h1"
+              variant="h4"
+              color="#191d28a3"
+              fontWeight={700}
+              fontSize={16}
+              padding="0 0 10px"
+              mt={5}
+            >
+              Not Found
+            </Typography>
+          </>
+        )}
       </Paper>
       {/* <SuccessModal open={open} handleClose={handleClose} /> */}
     </Box>

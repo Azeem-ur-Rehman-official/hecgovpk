@@ -53,7 +53,7 @@ const Apply = () => {
   const [data, setData] = useState([
     {
       stamp: "9878323",
-      cnic: "35201103977261",
+      cnic: "3520103977261",
       name: "Adeel Akram",
       university: "University of the Punjab",
       degree: "Bachlor of Commerce",
@@ -83,7 +83,7 @@ const Apply = () => {
         setData([
           {
             stamp: "9878323",
-            cnic: "35201103977261",
+            cnic: "3520103977261",
             name: "Adeel Akram",
             university: "University of the Punjab",
             degree: "Bachlor of Commerce",
