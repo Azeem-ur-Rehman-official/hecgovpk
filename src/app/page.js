@@ -63,6 +63,22 @@ const Apply = () => {
   const [apiStatus, setApiStatus] = useState(false);
   const [capcha, setCapcha] = useState(false);
   console.log("data", data);
+  const apiData=[
+    {
+      stamp: "9878323",
+      cnic: "3520103977261",
+      name: "Adeel Akram",
+      university: "University of the Punjab",
+      degree: "Bachlor of Commerce",
+    },
+    {
+      stamp: "9878324",
+      cnic: "3520103977262",
+      name: "Shahid",
+      university: "University of the Punjab",
+      degree: "Bachlor of Commerce",
+    },
+  ]
   const initialValues = {
     stampNumber: "",
     attestationType: "",

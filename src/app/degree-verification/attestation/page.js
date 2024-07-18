@@ -50,7 +50,11 @@ const validationSchema = [
 
 const Apply = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [data, setData] = useState([
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState(false);
+  const [apiStatus, setApiStatus] = useState(false);
+  const [capcha, setCapcha] = useState(false);
+  const apiData = [
     {
       stamp: "9878323",
       cnic: "3520103977261",
@@ -58,11 +62,14 @@ const Apply = () => {
       university: "University of the Punjab",
       degree: "Bachlor of Commerce",
     },
-  ]);
-  const [status, setStatus] = useState(false);
-  const [apiStatus, setApiStatus] = useState(false);
-  const [capcha, setCapcha] = useState(false);
-  console.log("data", data);
+    {
+      stamp: "9878324",
+      cnic: "1730194060657",
+      name: "Asif Bashir",
+      university: "Comsats University of Science & Technology, Abbotabad",
+      degree: "Bachelor of Computer Systems Engineering",
+    },
+  ];
   const initialValues = {
     stampNumber: "",
     attestationType: "",
@@ -76,25 +83,31 @@ const Apply = () => {
       formData.append("attestationType", values.attestationType);
       formData.append("cnicPassport", values.cnicPassport);
       // const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
-      if (
-        values.stampNumber == data[0].stamp &&
-        values.cnicPassport == data[0].cnic
-      ) {
-        setData([
-          {
-            stamp: "9878323",
-            cnic: "3520103977261",
-            name: "Adeel Akram",
-            university: "University of the Punjab",
-            degree: "Bachlor of Commerce",
-          },
-        ]);
-        setApiStatus(true);
-        setStatus(true);
-      } else {
-        setApiStatus(true);
-        setStatus(false);
+      let found =false;
+      for (let i = 0; i < apiData.length; i++) {
+        if (
+          values.stampNumber == apiData[i].stamp &&
+          values.cnicPassport == apiData[i].cnic
+        ) {
+          found=true;
+          setData([
+            {
+              stamp: apiData[i].stamp,
+              cnic: apiData[i].cnic,
+              name: apiData[i].name,
+              university: apiData[i].university,
+              degree: apiData[i].degree,
+            },
+          ]);
+          setApiStatus(true);
+          setStatus(true);
+        }
       }
+      if(found==false)
+        {
+          setApiStatus(true);
+          setStatus(false);
+        }
     } catch (err) {
       console.log("err", err);
     }
@@ -266,28 +279,30 @@ const Apply = () => {
                       )}
                     </Grid>
                     <Grid item xs={4}>
-                    <Box className="mainCap">
-                    <div className="captcha">
-                        <div className="spinner">
-                          <label onClick={()=>setCapcha(true)}>
-                            <input
-                              type="checkbox"
-                              onclick="$(this).attr('disabled','disabled');"
+                      <Box className="mainCap">
+                        <div className="captcha">
+                          <div className="spinner">
+                            <label onClick={() => setCapcha(true)}>
+                              <input
+                                type="checkbox"
+                                onclick="$(this).attr('disabled','disabled');"
+                              />
+                              <span class="checkmark">
+                                <span>&nbsp;</span>
+                              </span>
+                            </label>
+                          </div>
+                          <div class="text">I'm not a robot</div>
+                          <div className="logo">
+                            <img
+                              src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/"
+                              alt="abc"
                             />
-                            <span class="checkmark">
-                              <span>&nbsp;</span>
-                            </span>
-                          </label>
+                            <p className="text2">reCAPTCHA</p>
+                            <small>Privacy - Terms</small>
+                          </div>
                         </div>
-                        <div class="text">I'm not a robot</div>
-                        <div className="logo">
-                          <img src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/" alt="abc"/>
-                          <p className="text2">reCAPTCHA</p>
-                          <small>Privacy - Terms</small>
-                        </div>
-                      </div>
-                    </Box>
-                      
+                      </Box>
                     </Grid>
                   </Grid>
                 </Box>
