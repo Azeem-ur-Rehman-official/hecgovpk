@@ -4,14 +4,11 @@ import Attestation from "@/lib/models/Attestation";
 
 export async function GET(req,res) {
   try {
-    // const payload = await request.json();
-    // await connect();
-    // const contacts = await Attestation.find({
-    //   cnic: payload.cnic,
-    //   stamp: payload.stamp,
-    // });
+   
+    await connect();
+    const contacts = await Attestation.find();
     // if (contacts.length == 0)
-      return NextResponse.json({ success: true, message: "Data found" });
+      return NextResponse.json({ success: true, message: "Data found",data:contacts });
    
     //return NextResponse.json({ success: true, Data: contacts });
   } catch (error) {
