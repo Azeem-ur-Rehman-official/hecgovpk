@@ -5,7 +5,7 @@ const mongodb_URI =
 // mongodb.js
 
 const connect = async () => {
-  const connectionState = mongoose.connection.readyState;
+  const connectionState =await mongoose.connection.readyState;
   if (connectionState === 1) {
     console.log("already connected");
     return;

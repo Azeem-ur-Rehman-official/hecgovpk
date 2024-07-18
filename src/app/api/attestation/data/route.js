@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connect from "@/lib/mongodb";
 import Attestation from "@/lib/models/Attestation";
-
+import mongoose from "mongoose";
 export async function GET(req,res) {
   try {
    
