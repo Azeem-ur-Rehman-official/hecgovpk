@@ -99,7 +99,7 @@ const CardsComponent = () => {
        
       }}
     >
-      <Box sx={{ display: "flex", overflow: "hidden",  }}>
+      {/* <Box sx={{ display: "flex", overflow: "hidden",  }}>
         <Grid container spacing={2}>
           <Grid item sm={12} md={12} xs={12}>
             <Card
@@ -164,7 +164,7 @@ const CardsComponent = () => {
           ))}
         </Grid>
         
-      </Box>
+      </Box> */}
     </Container>
   );
 };
