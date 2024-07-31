@@ -6,7 +6,7 @@ const page = () => {
   return (
     <div className='main-bg'>
         <Box>
-            <CardMedia src></CardMedia>
+           abc
         </Box>
     </div>
   )

@@ -3,16 +3,15 @@ import React, { useState } from "react";
 import {
   Box,
   Card,
-  CardActions,
+
   CardContent,
-  CardMedia,
+ 
   Container,
   Grid,
-  IconButton,
+
   Typography,
 } from "@mui/material";
-import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import Image from "next/image";
+
 
 const CardsComponent = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
