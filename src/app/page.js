@@ -1,583 +1,578 @@
-// pages/apply.js
-"use client";
-// pages/apply.js
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Stepper,
-  Step,
-  StepLabel,
-  Typography,
-  Grid,
-  TextField,
-  MenuItem,
-  FormControl,
-  Select,
-  InputLabel,
-  Avatar,
-  IconButton,
-  Paper,
-  FormControlLabel,
-  Checkbox,
-  FormHelperText,
-} from "@mui/material";
-import { Formik, Form, Field, ErrorMessage, useField } from "formik";
-import * as Yup from "yup";
-import ReCAPTCHA from "react-google-recaptcha";
-import PrintIcon from "@mui/icons-material/Print";
-import axios from "axios";
-
-export async function postRequest(param, data) {
-  try {
-    const response = await axios.post(param, data);
-
-    return response;
-  } catch (error) {
-    console.error("Error creating post:", error);
-    return error;
-  }
-}
-
-const validationSchema = [
-  Yup.object({
-    stampNumber: Yup.string().required("Required"),
-    attestationType: Yup.string().required("Required"),
-    cnicPassport: Yup.string().required("Required"),
-  }),
-];
-
-const Apply = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [data, setData] = useState([
-    {
-      stamp: "9878323",
-      cnic: "3520103977261",
-      name: "Adeel Akram",
-      university: "University of the Punjab",
-      degree: "Bachlor of Commerce",
-    },
-  ]);
-  const [status, setStatus] = useState(false);
-  const [apiStatus, setApiStatus] = useState(false);
-  const [capcha, setCapcha] = useState(false);
-  console.log("data", data);
-  const apiData=[
-    {
-      stamp: "9878323",
-      cnic: "3520103977261",
-      name: "Adeel Akram",
-      university: "University of the Punjab",
-      degree: "Bachlor of Commerce",
-    },
-    {
-      stamp: "9878324",
-      cnic: "3520103977262",
-      name: "Shahid",
-      university: "University of the Punjab",
-      degree: "Bachlor of Commerce",
-    },
-  ]
-  const initialValues = {
-    stampNumber: "",
-    attestationType: "",
-    cnicPassport: "",
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      const formData = new FormData();
-      formData.append("stampNumber", values.stampNumber);
-      formData.append("attestationType", values.attestationType);
-      formData.append("cnicPassport", values.cnicPassport);
-      // const data = await postRequest("/api/attestation/getdata", {"stamp":values.stampNumber,"cnic":values.cnicPassport});
-      if (
-        values.stampNumber == data[0].stamp &&
-        values.cnicPassport == data[0].cnic
-      ) {
-        setData([
-          {
-            stamp: "9878323",
-            cnic: "3520103977261",
-            name: "Adeel Akram",
-            university: "University of the Punjab",
-            degree: "Bachlor of Commerce",
-          },
-        ]);
-        setApiStatus(true);
-        setStatus(true);
-      } else {
-        setApiStatus(true);
-        setStatus(false);
-      }
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
-  function recap(value) {
-    console.log("Captcha value:", value);
-    setCapcha(true);
-  }
+import { Box, Container, Grid, Typography } from "@mui/material";
+import React from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import CarouselComponent from "./CarouselComponent";
+import CardsComponent from "./CardsComponent";
+import KeyboardArrowLeftSharpIcon from "@mui/icons-material/KeyboardArrowLeftSharp";
+import KeyboardArrowRightSharpIcon from "@mui/icons-material/KeyboardArrowRightSharp";
+import ArrowRightAltSharpIcon from "@mui/icons-material/ArrowRightAltSharp";
+const page = () => {
   return (
-    <Box component="main" background="#f9f9fc" mb={12}>
-      <Paper
-        sx={{
-          mt: 3,
-          pt: 3,
-          pl: 3,
-          pr: 3,
-          pb: 1,
-          boxShadow: " 0 0 5px #d4d4d4",
-        }}
-      >
-        <Typography
-          component="h1"
-          variant="h4"
-          color="#191d28a3"
-          fontWeight={700}
-          fontSize={16}
-          padding="0 0 10px"
-          borderBottom="1px solid #dbe0e4"
+    <div className="d-flex justify-content-center align-items-center sample">
+    <h5>Page not found</h5>
+      {/* <div className="main-bg pb-5">
+    
+      <Box >
+        <div className="header1 pt-5">
+          <div>
+            <MenuIcon
+              sx={{ color: "#ffffff", fontSize: "34px" }}
+              className="menuIcon"
+            />
+          </div>
+          
+          <div className="search-wrap">
+            <SearchIcon className="searchIcon" />
+            <input
+              type="text"
+              placeholder="Search a keyword, service, scholarships etc"
+              id="landingSearchInput"
+              readonly="readonly"
+            ></input>
+          </div>
+        </div>
+        <div className="d-flex justify-content-md-center">
+            <img src="/main-logo.png" alt="sks" className="top-logo" />
+          </div>
+          <div className="p-2"></div>
+        <div class="main-heading text-center mt-5" id="welcomeText">
+          <h1 class="text-uppercase">Welcome to HEC Pakistan</h1>
+          <p>Empowering Pakistan through Higher Education</p>
+        </div>
+        <div className="tabCards">
+          <CarouselComponent />
+        </div>
+        <div className="mobCards">
+          <div className="search-wrap2">
+            <SearchIcon className="searchIcon2" />
+            <input
+              type="text"
+              placeholder="Search a keyword, service, scholarships etc"
+              id="landingSearchInput2"
+              readonly="readonly"
+            ></input>
+          </div>
+          <CardsComponent />
+        </div>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          DEGREE ATTESTATION VERIFICATION
-        </Typography>
-
-        <Box my={5}>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema[activeStep]}
-            onSubmit={(values) => {
-              handleSubmit(values);
-            }}
+          <Grid
+            container
+            mt={3}
+           
+            sx={{ width: { md: "80%", xs: "90%", sm: "90%" } }}
           >
-            {({ setFieldValue, values, errors, touched, resetForm }) => (
-              <Form>
-                <Box>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
-                      <Field
-                        name="attestationType"
-                        as={TextField}
-                        select
-                        label="Attestation Type *"
-                        fullWidth
-                        variant="outlined"
-                        color="success"
-                        size="small"
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            // - The Input-root, inside the TextField-root
-                            "& fieldset": {
-                              // - The <fieldset> inside the Input-root
-                              borderColor: "#191d28a3", // - Set the Input border
-                            },
-                            "&:hover fieldset": {
-                              borderWidth: "2px",
-                              borderColor: "#191d28a3",
-                              borderRadius: "5px",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="Original">Original</MenuItem>
-                        <MenuItem value="Photocopy">Photocopy</MenuItem>
-                      </Field>
-                      <ErrorMessage
-                        name="attestationType"
-                        component="div"
-                        style={{ color: "red", fontSize: "12px" }}
-                      />
-                      {!errors.attestationType && (
-                        <FormHelperText id="standard-weight-helper-text-email-login">
-                          Please select Attestation Type
-                        </FormHelperText>
-                      )}
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                      <Field
-                        name="cnicPassport"
-                        as={TextField}
-                        label="CNIC/Passport Number *"
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            // - The Input-root, inside the TextField-root
-                            "& fieldset": {
-                              // - The <fieldset> inside the Input-root
-                              borderColor: "#191d28a3", // - Set the Input border
-                            },
-                            "&:hover fieldset": {
-                              borderWidth: "2px",
-                              borderColor: "#191d28a3",
-                              borderRadius: "5px",
-                            },
-                          },
-                        }}
-                        size="small"
-                        // inputProps={{
-                        //   style: {
-                        //     height: "20px",
-                        //   },
-                        // }}
-                        color="success"
-                        error={Boolean(
-                          touched.cnicPassport && errors.cnicPassport
-                        )}
-                      />
-                      <ErrorMessage
-                        name="cnicPassport"
-                        component="body2"
-                        style={{ color: "red", fontSize: "12px" }}
-                      />
-                      {!errors.cnicPassport && (
-                        <FormHelperText id="standard-weight-helper-text-email-login">
-                          Please search with cnic/passport number
-                        </FormHelperText>
-                      )}
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                      <Field
-                        name="stampNumber"
-                        as={TextField}
-                        label="Stamp Number *"
-                        fullWidth
-                        variant="outlined"
-                        color="success"
-                        size="small"
-                        error={Boolean(
-                          touched.stampNumber && errors.stampNumber
-                        )}
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            // - The Input-root, inside the TextField-root
-                            "& fieldset": {
-                              // - The <fieldset> inside the Input-root
-                              borderColor: "#191d28a3", // - Set the Input border
-                            },
-                            "&:hover fieldset": {
-                              borderWidth: "2px",
-                              borderColor: "#191d28a3",
-                              borderRadius: "5px",
-                            },
-                          },
-                        }}
-                        // inputProps={{
-                        //   style: {
-                        //     height: "20px",
-                        //   },
-                        // }}
-                      />
-                      <ErrorMessage
-                        name="stampNumber"
-                        component="div"
-                        style={{ color: "red", fontSize: "12px" }}
-                      />
-
-                      {!errors.stampNumber && (
-                        <FormHelperText id="standard-weight-helper-text-email-login">
-                          Please enter stamp number
-                        </FormHelperText>
-                      )}
-                    </Grid>
-                    <Grid item xs={4}>
-                    <Box className="mainCap">
-                    <div className="captcha">
-                        <div className="spinner">
-                          <label onClick={()=>setCapcha(true)}>
-                            <input
-                              type="checkbox"
-                              onclick="$(this).attr('disabled','disabled');"
-                            />
-                            <span class="checkmark">
-                              <span>&nbsp;</span>
-                            </span>
-                          </label>
-                        </div>
-                        <div class="text">I'm not a robot</div>
-                        <div className="logo">
-                          <img src="https://forum.nox.tv/core/index.php?media/9-recaptcha-png/" alt="abc"/>
-                          <p className="text2">reCAPTCHA</p>
-                          <small>Privacy - Terms</small>
-                        </div>
-                      </div>
-                    </Box>
-                      
-                    </Grid>
-                  </Grid>
-                </Box>
-
-                <Grid container spacing={2} mt={5}>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: { xs: "center", md: "flex-start" },
-                    }}
-                  >
-                    {capcha == false ||
-                    values.cnicPassport == "" ||
-                    values.stampNumber == "" ? (
-                      <button type="submit" className="searchBtn">
-                        SEARCH
-                      </button>
-                    ) : (
-                      <button type="submit" className="searchBtnActive">
-                        SEARCH
-                      </button>
-                    )}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: { xs: "center", md: "flex-end" },
-                      alignItems: "center",
-                      gap: 2,
-                    }}
-                  >
-                    <button className="closeBtn">CLOSE</button>
-                    <button className="resetBtn" onClick={() => resetForm()}>
-                      RESET
-                    </button>
-                  </Grid>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
-        </Box>
-
-        {/* Degree Attestation Detail */}
-        {apiStatus == true && status == true && (
-          <>
-            <Typography
-              component="h1"
-              variant="h4"
-              color="#191d28a3"
-              fontWeight={700}
-              fontSize={16}
-              padding="0 0 10px"
-              borderBottom="1px solid #dbe0e4"
+            <Grid
+              item
+              sm={12}
+              md={3}
+              xs={12}
+              className="left-border"
+              sx={{
+                backgroundColor: "#E5B24C",
+                padding: "10px",
+                position: "relative",
+               
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-              ATTESTATION DETAILS
-            </Typography>
-
-            <Grid container spacing={2} mt={2}>
-              <Grid
-                item
-                xs={12}
-                md={12}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <button className="printBtn">
-                  <PrintIcon style={{ fontSize: 20, mr: 2 }}></PrintIcon>
-                  {"    "}PRINT DETAILS
-                </button>
-              </Grid>
+              <img src="/anouc.png" width="50px" className="anouc" alt="ssks" />
+              <div></div>
+              <Typography color="#ffffff" fontWeight="bold" fontSize="14px">
+                Annoucements
+              </Typography>
             </Grid>
             <Grid
-              container
+              item
               sm={12}
               md={6}
-              spacing={2}
-              className="box"
-              mt={2}
-              mb={5}
+              xs={12}
+             
+              sx={{
+                backgroundColor: "#111747",
+                padding: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
             >
-              <Grid item xs={12} md={12}>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  color="#191d28a3"
-                  fontWeight={800}
-                  fontSize={14}
-                  padding="0 0 10px"
-                >
-                  Degree Attestation Details
-                </Typography>
-              </Grid>
-
-              <Grid
-                item
-                xs={6}
-                md={6}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Box>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    fontWeight={600}
-                    color="#94b1bc"
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    NAME ON DEGREE
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    color="#191d28a3"
-                    fontWeight={600}
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    {data[0].name}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                md={6}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Box>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    fontWeight={600}
-                    color="#94b1bc"
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    CNIC
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    color="#191d28a3"
-                    fontWeight={700}
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    {data[0].cnic}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Box>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    fontWeight={600}
-                    color="#94b1bc"
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    UNIVERSITY
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    color="#191d28a3"
-                    fontWeight={600}
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    {data[0].university}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Box>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    fontWeight={600}
-                    color="#94b1bc"
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    DEGREE TITLE
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h4"
-                    color="#191d28a3"
-                    fontWeight={600}
-                    fontSize={13}
-                    padding="0 0 10px"
-                  >
-                    {data[0].degree}
-                  </Typography>
-                </Box>
-              </Grid>
+              <Typography color="#ffffff" textAlign="left" fontSize="14px">
+                Position Announcement for Vice Chancellors for Public Sector
+                Universities
+              </Typography>
             </Grid>
-          </>
-        )}
+            <Grid
+              item
+              sm={12}
+              md={3}
+              xs={12}
+              className="right-border"
+              sx={{
+                backgroundColor: "#111747",
+                padding: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: { xs: "center", md: "end" },
+                
+                borderTop: { xs: "1px solid #595959", md: "none" },
+              }}
+            >
+              <Box sx={{ display: { md: "block", sm: "none", xs: "none" } }}>
+                <KeyboardArrowLeftSharpIcon sx={{ color: "#fff" }} />
+                <KeyboardArrowRightSharpIcon sx={{ color: "#fff" }} />
+              </Box>
 
-        {apiStatus == true && status == false && (
-          <>
-            <Typography
-              component="h1"
-              variant="h4"
-              color="#191d28a3"
-              fontWeight={700}
-              fontSize={16}
-              padding="0 0 10px"
-              borderBottom="1px solid #dbe0e4"
+              <Typography
+                variant="h6"
+                sx={{ color: "#fff", fontWeight: "bold", fontSize: "16px" }}
+              >
+                See All
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            mt={3}
+            sx={{ width: { md: "80%", xs: "90%", sm: "90%" } }}
+          >
+            <Grid
+              item
+              sm={12}
+              md={2}
+              xs={12}
+              
+className="left-border"
+              sx={{
+                backgroundColor: "#fff",
+
+                position: "relative",
+
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "start",
+                
+              }}
             >
-              ATTESTATION DETAILS
-            </Typography>
-            <Typography
-              component="h1"
-              variant="h4"
-              color="#191d28a3"
-              fontWeight={700}
-              fontSize={16}
-              padding="0 0 10px"
-              mt={5}
+              <img src="/APAN58logo.jpg" className="anouc2" alt="ssks" />
+            </Grid>
+            <Grid
+              item
+              sm={12}
+              md={8}
+              xs={12}
+              sx={{
+                backgroundColor: "#fff",
+                padding: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
             >
-              Not Found
-            </Typography>
-          </>
-        )}
-      </Paper>
-      {/* <SuccessModal open={open} handleClose={handleClose} /> */}
-    </Box>
+              <Typography textAlign="left" fontSize="14px">
+                58th Asia Pacific Advanced Network Meeting, 26 – 30 August 2024
+                Islamabad, Pakistan
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              sm={12}
+              md={2}
+              xs={12}
+              className="right-border"
+              sx={{
+                backgroundColor: "#fff",
+                padding: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: { xs: "center", md: "end" },
+                
+                borderTop: { xs: "1px solid #000", md: "none" },
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ color: "#349C7D", fontWeight: "bold", fontSize: "16px" }}
+              >
+                Read More
+              </Typography>
+              <Box sx={{ display: { md: "block", sm: "none", xs: "none" } }}>
+                <ArrowRightAltSharpIcon
+                  sx={{ color: "#349C7D", fontSize: "30px" }}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+          
+          <Box
+            container
+            className="main-footer"
+            mt={3}
+            sx={{ width: { md: "80%", xs: "90%", sm: "90%" } }}
+          >
+            <div className="footer-links-wrapper">
+              <ul
+                className="d-flex align-items-center flex-wrap flex-xl-nowrap "
+                id="QuickLinks"
+              >
+                <li class="d-none d-xl-block">
+                  <p>Quick Links</p>
+                </li>
+                <li>
+                  <a className="bl" href="https://www.hec.gov.pk/english/services/universities/Monitoring-Evaluation/Pages/default.aspx">
+                    Monitoring Evaluation
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.hec.gov.pk/english/services/universities/QAA/Pages/default.aspx">
+                    Quality Assurance Agency
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.hec.gov.pk/english/services/universities/HEDP/Pages/default.aspx">
+                    HEDP Project
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.hec.gov.pk/english/news/Pages/TendersRFPs.aspx">
+                    Tenders RFPs
+                  </a>
+                </li>
+                <li>
+                  <a href="https://careers.hec.gov.pk/">Jobs Careers</a>
+                </li>
+                <li>
+                  <a href="https://www.hec.gov.pk/english/Notifications/Pages/default.aspx">
+                    Notifications
+                  </a>
+                </li>
+                <li class="d-none d-xl-block">
+                  <ul
+                    class="d-flex align-items-center flex-wrap flex-xl-nowrap "
+                    id="social-media-icons"
+                  >
+                    <li>
+                      <a
+                        href="https://www.facebook.com/HECPakistan2002/"
+                        onclick="openInNewTab(event)"
+                        className="border-none"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/facebook.svg"
+                          alt="Facebook"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://twitter.com/hecpkofficial"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/X.png"
+                          alt="Twitter"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.youtube.com/channel/UCctruSZb5g5Y2Q8_Sgqygsg?"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/youtube.svg"
+                          alt="Youtube"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.instagram.com/hec_pk/"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/PublishingImages/Social%20Media%20Icons/instagram.png"
+                          alt="Instagram"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.linkedin.com/company/hec-pakistan"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/PublishingImages/Social%20Media%20Icons/linkedin%20logo_icon.png"
+                          alt="Linkedin"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.whatsapp.com/channel/0029VaKcxd74dTnMvcB9Hy0l"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/whatsapp.png"
+                          alt="Whatsapp-Channel"
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <div class="footer-bottom d-flex align-items-center flex-wrap flex-xl-nowrap justify-content-xl-between">
+                <ul
+                  class="d-flex align-items-center flex-wrap flex-xl-nowrap pt-2 pb-2"
+                  id="landingBottomFooter"
+                >
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/aboutus/Pages/aboutus.aspx">
+                      About Us
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/Pages/ContactUs.aspx">
+                      Contact Us
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/news/Pages/MainEventsPage.aspx">
+                      Events
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://onlinehelp.hec.gov.pk/">Help/Complaints</a>
+                  </li>
+                </ul>
+                <ul class="landing-lang">
+                  <li>
+                    <select name="lang" id="langFooter">
+                      <option value="en">English</option>
+                      <option value="ur">اردو</option>
+                    </select>
+                  </li>
+                </ul>
+                <ul
+                  class="d-flex align-items-center flex-wrap flex-xl-nowrap"
+                  id="landingBottomsection2"
+                >
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/Pages/PrivacyPolicy.aspx">
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/Pages/Terms-Conditions.aspx">
+                      Terms &amp; Conditions
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.hec.gov.pk/english/Pages/Copyrights.aspx">
+                      Copyrights HEC 2024
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Box>
+          <Box
+            container
+            className="main-footer2"
+            mt={3}
+            sx={{ width: { md: "80%", xs: "90%", sm: "90%" } }}
+          >
+            <div className="footer-links-wrapper">
+              <ul
+                className="d-flex align-items-center flex-wrap flex-xl-nowrap "
+                id="QuickLinks"
+              >
+                <li class="d-flex justify-content-center w-100 borderBottom">
+                  <p className="text-align-center">Quick Links</p>
+                </li>
+                <li className="w-50">
+                  <a className="bl" href="https://www.hec.gov.pk/english/services/universities/Monitoring-Evaluation/Pages/default.aspx">
+                    Monitoring Evaluation
+                  </a>
+                </li>
+                <li className="w-50">
+                  <a href="https://www.hec.gov.pk/english/services/universities/QAA/Pages/default.aspx">
+                    Quality Assurance Agency
+                  </a>
+                </li>
+                <li className="w-50">
+                  <a href="https://www.hec.gov.pk/english/services/universities/HEDP/Pages/default.aspx">
+                    HEDP Project
+                  </a>
+                </li>
+                <li className="w-50">
+                  <a href="https://www.hec.gov.pk/english/news/Pages/TendersRFPs.aspx">
+                    Tenders RFPs
+                  </a>
+                </li>
+                <li className="w-50">
+                  <a href="https://careers.hec.gov.pk/">Jobs Careers</a>
+                </li>
+                <li className="w-50">
+                  <a href="https://www.hec.gov.pk/english/Notifications/Pages/default.aspx">
+                    Notifications
+                  </a>
+                </li>
+               
+              </ul>
+              <div class="footer-bottom d-flex align-items-center flex-wrap flex-xl-nowrap justify-content-xl-between">
+                <ul
+                  class="d-flex align-items-center flex-wrap flex-xl-nowrap pt-2 pb-2"
+                  id="landingBottomFooter"
+                >
+                  <li className="w-50">
+                    <a href="https://www.hec.gov.pk/english/aboutus/Pages/aboutus.aspx">
+                      About Us
+                    </a>
+                  </li>
+                  <li className="w-50">
+                    <a href="https://www.hec.gov.pk/english/Pages/ContactUs.aspx">
+                      Contact Us
+                    </a>
+                  </li>
+                  <li className="w-50">
+                    <a href="https://www.hec.gov.pk/english/news/Pages/MainEventsPage.aspx">
+                      Events
+                    </a>
+                  </li>
+                  <li className="w-50">
+                    <a href="https://onlinehelp.hec.gov.pk/">Help/Complaints</a>
+                  </li>
+                </ul>
+                <ul class="landing-lang">
+                  <li className="w-100">
+                    <select name="lang" id="langFooter">
+                      <option value="en">English</option>
+                      <option value="ur">اردو</option>
+                    </select>
+                  </li>
+                </ul>
+                <ul
+                  class="d-flex align-items-center flex-wrap flex-xl-nowrap"
+                  id="landingBottomsection2"
+                >
+                  <li className="w-33">
+                    <a href="https://www.hec.gov.pk/english/Pages/PrivacyPolicy.aspx">
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li className="w-33">
+                    <a href="https://www.hec.gov.pk/english/Pages/Terms-Conditions.aspx">
+                      Terms &amp; Conditions
+                    </a>
+                  </li>
+                  <li className="w-33">
+                    <a href="https://www.hec.gov.pk/english/Pages/Copyrights.aspx">
+                      Copyrights HEC 2024
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <li class="d-flex justify-content-end borderTop w-100 mt-3">
+                  <ul
+                    class="d-flex align-items-center gap-2 p-3 flex-wrap flex-xl-nowrap "
+                    id="social-media-icons"
+                  >
+                    <li>
+                      <a
+                        href="https://www.facebook.com/HECPakistan2002/"
+                        onclick="openInNewTab(event)"
+                        className="border-none"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/facebook.svg"
+                          alt="Facebook"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://twitter.com/hecpkofficial"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/X.png"
+                          alt="Twitter"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.youtube.com/channel/UCctruSZb5g5Y2Q8_Sgqygsg?"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/youtube.svg"
+                          alt="Youtube"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.instagram.com/hec_pk/"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/PublishingImages/Social%20Media%20Icons/instagram.png"
+                          alt="Instagram"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.linkedin.com/company/hec-pakistan"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/PublishingImages/Social%20Media%20Icons/linkedin%20logo_icon.png"
+                          alt="Linkedin"
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.whatsapp.com/channel/0029VaKcxd74dTnMvcB9Hy0l"
+                        onclick="openInNewTab(event)"
+                      >
+                        <img
+                          src="https://www.hec.gov.pk/Style%20Library/HEC/images/whatsapp.png"
+                          alt="Whatsapp-Channel"
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+            </div>
+          </Box>
+        </Box>
+        
+        
+          
+       
+      </Box>
+      <a href="https://edutv.hec.gov.pk/" className="youtube">
+        <img src="/youtube.png" alt="youtube"/>
+        </a>
+    </div> */}
+    </div>
+    
   );
 };
 
-export default Apply;
+export default page;

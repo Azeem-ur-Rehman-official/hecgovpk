@@ -118,7 +118,11 @@ const Apply = () => {
   }
   return (
     <Box component="main" background="#f9f9fc" mb={12}>
-      <Paper
+    <div className="d-flex justify-content-center align-items-center sample">
+    <h5>Page not found</h5>
+    </div>
+   
+      {/* <Paper
         sx={{
           mt: 3,
           pt: 3,
@@ -260,11 +264,7 @@ const Apply = () => {
                             },
                           },
                         }}
-                        // inputProps={{
-                        //   style: {
-                        //     height: "20px",
-                        //   },
-                        // }}
+                       
                       />
                       <ErrorMessage
                         name="stampNumber"
@@ -353,7 +353,7 @@ const Apply = () => {
           </Formik>
         </Box>
 
-        {/* Degree Attestation Detail */}
+       
         {apiStatus == true && status == true && (
           <>
             <Typography
@@ -573,7 +573,7 @@ const Apply = () => {
             </Typography>
           </>
         )}
-      </Paper>
+      </Paper> */}
       {/* <SuccessModal open={open} handleClose={handleClose} /> */}
     </Box>
   );
